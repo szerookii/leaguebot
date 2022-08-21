@@ -11,5 +11,11 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Database files
+*.db
+
+# Configuration file
+*.json
+
 # Dependency directories (remove the comment below to include it)
 # vendor/

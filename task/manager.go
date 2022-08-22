@@ -47,10 +47,12 @@ func (mgr *TaskManager) Register(task Task) {
 	ticker := time.NewTicker(task.GetInterval())
 
 	go func() {
-		<-ticker.C
-		err := task.Run(&Context{client: mgr.client, config: mgr.config, leagueApi: mgr.leagueApi})
-		if err != nil {
-			log.Println(err)
+		for {
+			<-ticker.C
+			err := task.Run(&Context{client: mgr.client, config: mgr.config, leagueApi: mgr.leagueApi})
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}()
 

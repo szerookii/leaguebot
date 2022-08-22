@@ -55,20 +55,8 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 		return err
 	}
 
-	var dataChanged bool
-
 	for _, oldSummonerData := range summoners {
 		newSummonerData, err := ctx.leagueApi.GetSummonerByName(oldSummonerData.Region, oldSummonerData.Name)
-		if err != nil {
-			return err
-		}
-
-		leagues, err := ctx.leagueApi.GetLeagueDataBySummoner(oldSummonerData.Region, newSummonerData.Id)
-		if err != nil {
-			return err
-		}
-
-		matchHistory, err := ctx.leagueApi.GetMatchesBySummoner(oldSummonerData.Region, newSummonerData.Puuid)
 		if err != nil {
 			return err
 		}
@@ -87,7 +75,12 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
 
-			dataChanged = true
+			err := db.UpdateColumns(&models.Summoner{
+				Id:   newSummonerData.Id,
+				Name: newSummonerData.Name,
+			}).Error
+
+			return err
 		}
 
 		if oldSummonerData.ProfileIconId != newSummonerData.ProfileIconId {
@@ -102,7 +95,12 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
 
-			dataChanged = true
+			err := db.UpdateColumns(&models.Summoner{
+				Id:            newSummonerData.Id,
+				ProfileIconId: newSummonerData.ProfileIconId,
+			}).Error
+
+			return err
 		}
 
 		if oldSummonerData.SummonerLevel != newSummonerData.SummonerLevel {
@@ -116,8 +114,16 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			e.AddField("Un niveau de plus, il s'agirait de toucher de l'herbe", fmt.Sprintf("Bravo %s, t'as abusé de l'EXP Boost... tu es maintenant niveau %d !", newSummonerData.Name, newSummonerData.SummonerLevel), false)
 
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
+		}
 
-			dataChanged = true
+		leagues, err := ctx.leagueApi.GetLeagueDataBySummoner(oldSummonerData.Region, newSummonerData.Id)
+		if err != nil {
+			return err
+		}
+
+		matchHistory, err := ctx.leagueApi.GetMatchesBySummoner(oldSummonerData.Region, newSummonerData.Puuid)
+		if err != nil {
+			return err
 		}
 
 		var soloUpated bool = false
@@ -128,7 +134,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				soloUpated = true
 
 				if match.Info.GameId != oldSummonerData.LastSoloGameId {
-					dataChanged = true
 					leagueData := getLeagueData(leagues, "RANKED_SOLO_5x5")
 
 					e := embed.NewEmbedBuilder()
@@ -168,7 +173,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				flexUpdated = true
 
 				if match.Info.GameId != oldSummonerData.LastFlexGameId {
-					dataChanged = true
 					leagueData := getLeagueData(leagues, "RANKED_FLEX_SR")
 
 					e := embed.NewEmbedBuilder()
@@ -204,9 +208,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					ctx.client.Channel.SendMessage(logChannel, e.Embed())
 				}
 			}
-		}
 
-		if dataChanged {
 			err = db.UpdateColumns(&models.Summoner{
 				Id:             newSummonerData.Id,
 				ProfileIconId:  newSummonerData.ProfileIconId,
@@ -220,9 +222,8 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				LastFlexRank:   oldSummonerData.LastFlexRank,
 				LastFlexLP:     oldSummonerData.LastFlexLP,
 			}).Error
-			if err != nil {
-				return err
-			}
+
+			return err
 		}
 	}
 

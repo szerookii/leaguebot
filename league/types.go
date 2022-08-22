@@ -88,7 +88,7 @@ type InfoDTO struct {
 	MapId              int64             `json:"mapId"`
 	Participants       []*ParticipantDTO `json:"participants"`
 	PlatformId         string            `json:"platformId"`
-	QueueId            int64             `json:"queueId"`
+	QueueId            QueueType         `json:"queueId"`
 	//Teams 	[]*TeamDTO `json:"teams"`
 	TournamentCode string `json:"tournamentCode"`
 }
@@ -96,5 +96,6 @@ type InfoDTO struct {
 type ParticipantDTO struct {
 	// ToDo : Add other fields
 
-	Win bool `json:"win"`
+	SummonerId string `json:"summonerId"`
+	Win        bool   `json:"win"`
 }

@@ -131,11 +131,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					dataChanged = true
 					leagueData := getLeagueData(leagues, "RANKED_SOLO_5x5")
 
-					oldSummonerData.LastSoloGameId = match.Info.GameId
-					oldSummonerData.LastSoloTier = leagueData.Tier
-					oldSummonerData.LastSoloRank = leagueData.Rank
-					oldSummonerData.LastSoloLP = leagueData.LeaguePoints
-
 					e := embed.NewEmbedBuilder()
 
 					e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
@@ -153,12 +148,17 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					} else {
 						e.SetColor(embed.Red)
 
-						e.AddField("De retour en looserQ", "> Qu'est ce que la honte ?\n>Sentiment d'abaissement, d'humiliation qui résulte d'une atteinte à l'honneur, à la dignité\nLa honte, c'est aussi perdre en ranked sur LoL, on espère ne plus te revoir", false)
+						e.AddField("De retour en looserQ", "> Qu'est ce que la honte ?\n> Sentiment d'abaissement, d'humiliation qui résulte d'une atteinte à l'honneur, à la dignité\nLa honte, c'est aussi perdre en ranked sur LoL, on espère ne plus te revoir", false)
 						e.AddField("Victoire", "❌", true)
 						e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
 						e.AddField("LP perdus", fmt.Sprintf(":small_red_triangle_down: %d LP", oldSummonerData.LastSoloLP-leagueData.LeaguePoints), true)
 						e.AddField("LP", fmt.Sprintf(":trophy: %d LP", leagueData.LeaguePoints), true)
 					}
+
+					oldSummonerData.LastSoloGameId = match.Info.GameId
+					oldSummonerData.LastSoloTier = leagueData.Tier
+					oldSummonerData.LastSoloRank = leagueData.Rank
+					oldSummonerData.LastSoloLP = leagueData.LeaguePoints
 
 					ctx.client.Channel.SendMessage(logChannel, e.Embed())
 				}
@@ -170,11 +170,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				if match.Info.GameId != oldSummonerData.LastFlexGameId {
 					dataChanged = true
 					leagueData := getLeagueData(leagues, "RANKED_FLEX_SR")
-
-					oldSummonerData.LastFlexGameId = match.Info.GameId
-					oldSummonerData.LastFlexTier = leagueData.Tier
-					oldSummonerData.LastFlexRank = leagueData.Rank
-					oldSummonerData.LastFlexLP = leagueData.LeaguePoints
 
 					e := embed.NewEmbedBuilder()
 
@@ -194,12 +189,17 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					} else {
 						e.SetColor(embed.Red)
 
-						e.AddField("De retour en looserQ (en flexible en plus, la honte)", "> Qu'est ce que la classée flexible ?\n>La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry, sauf que là c’était pas ton cas avec le powerspike en 0/10...", false)
+						e.AddField("De retour en looserQ (en flexible en plus, la honte)", "> Qu'est ce que la classée flexible ?\n> La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry, sauf que là c’était pas ton cas avec le powerspike en 0/10...", false)
 						e.AddField("Victoire", "❌", true)
 						e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
 						e.AddField("LP perdus", fmt.Sprintf(":small_red_triangle_down: %d LP", oldSummonerData.LastFlexLP-leagueData.LeaguePoints), true)
 						e.AddField("LP", fmt.Sprintf(":trophy: %d LP", leagueData.LeaguePoints), true)
 					}
+
+					oldSummonerData.LastFlexGameId = match.Info.GameId
+					oldSummonerData.LastFlexTier = leagueData.Tier
+					oldSummonerData.LastFlexRank = leagueData.Rank
+					oldSummonerData.LastFlexLP = leagueData.LeaguePoints
 
 					ctx.client.Channel.SendMessage(logChannel, e.Embed())
 				}

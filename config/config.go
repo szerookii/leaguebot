@@ -7,9 +7,10 @@ import (
 )
 
 type Config struct {
-	Token           string `json:"token"`
-	ReportChannelId string `json:"report_channel_id"`
-	LeagueAPIKey    string `json:"league_api_key"`
+	Token           string   `json:"token"`
+	ReportChannelId string   `json:"report_channel_id"`
+	LeagueAPIKey    string   `json:"league_api_key"`
+	Admins          []string `json:"admins"`
 }
 
 func GetConfig() (*Config, error) {

@@ -8,6 +8,7 @@ import (
 	"github.com/szerookii/leaguebot/database"
 	"github.com/szerookii/leaguebot/event"
 	"github.com/szerookii/leaguebot/league"
+	"github.com/szerookii/leaguebot/task"
 )
 
 var (
@@ -15,6 +16,7 @@ var (
 	Config    *config.Config
 	leagueApi *league.LeagueAPI
 	cmdMgr    *command.CommandManager
+	taskMgr   *task.TaskManager
 )
 
 func main() {
@@ -25,7 +27,9 @@ func main() {
 		Intents: gateway.IntentGuilds,
 	})
 	cmdMgr = command.NewCommandManager(client, Config, leagueApi)
+	taskMgr = task.NewTaskManager(client, Config, leagueApi)
 
+	taskMgr.Init()
 	database.Init()
 
 	_ = client.On("ready", event.OnReady(client, Config, cmdMgr))

@@ -1,5 +1,13 @@
 package league
 
+type QueueType int
+
+const (
+	RankedSolo QueueType = 420
+	RankedFlex QueueType = 440
+	Clash      QueueType = 700
+)
+
 type SummonerDTO struct {
 	Id            string `json:"id"`
 	AccountId     string `json:"accountId"`
@@ -54,4 +62,39 @@ type ChampionData struct {
 	Title   string `json:"title"`
 	Blurb   string `json:"blurb"`
 	// ToDo other fields
+}
+
+type MatchDTO struct {
+	Metadata *MetadataDTO `json:"metadata"`
+	Info     *InfoDTO     `json:"info"`
+}
+
+type MetadataDTO struct {
+	DataVersion  string   `json:"dataVersion"`
+	MatchId      string   `json:"matchId"`
+	Participants []string `json:"participants"` // A list of participant PUUIDs.
+}
+
+type InfoDTO struct {
+	GameCreation       int64             `json:"gameCreation"`
+	GameDuration       int64             `json:"gameDuration"`
+	GameEndTimestamp   int64             `json:"gameEndTimestamp"`
+	GameId             int64             `json:"gameId"`
+	GameMode           string            `json:"gameMode"`
+	GameName           string            `json:"gameName"`
+	GameStartTimestamp int64             `json:"gameStartTimestamp"`
+	GameType           string            `json:"gameType"`
+	GameVersion        string            `json:"gameVersion"`
+	MapId              int64             `json:"mapId"`
+	Participants       []*ParticipantDTO `json:"participants"`
+	PlatformId         string            `json:"platformId"`
+	QueueId            int64             `json:"queueId"`
+	//Teams 	[]*TeamDTO `json:"teams"`
+	TournamentCode string `json:"tournamentCode"`
+}
+
+type ParticipantDTO struct {
+	// ToDo : Add other fields
+
+	Win bool `json:"win"`
 }

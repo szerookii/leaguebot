@@ -30,6 +30,7 @@ func (mgr *CommandManager) Init() {
 	mgr.Register(new(ProfileCommand))
 	mgr.Register(new(ChampionMasteryCommand))
 	mgr.Register(new(AddSummonerCommand))
+	mgr.Register(new(InfoCommand))
 }
 
 func (mgr *CommandManager) Handler(client *gateway.Session, config *config.Config) func(*discord.Interaction) {

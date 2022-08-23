@@ -114,6 +114,13 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			e.AddField("Un niveau de plus, il s'agirait de toucher de l'herbe", fmt.Sprintf("Bravo %s, t'as abusé de l'EXP Boost... tu es maintenant niveau %d !", newSummonerData.Name, newSummonerData.SummonerLevel), false)
 
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
+
+			err := db.UpdateColumns(&models.Summoner{
+				Id:            newSummonerData.Id,
+				SummonerLevel: newSummonerData.SummonerLevel,
+			}).Error
+
+			return err
 		}
 
 		leagues, err := ctx.leagueApi.GetLeagueDataBySummoner(oldSummonerData.Region, newSummonerData.Id)

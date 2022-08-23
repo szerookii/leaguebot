@@ -15,6 +15,6 @@ func OnReady(client *gateway.Session, config *config.Config, cmdMgr *command.Com
 
 		cmdMgr.Init()
 
-		_ = client.SetActivity(&discord.Activity{Name: "les silvers feed 👺 | /help", Type: discord.ActivityListening})
+		_ = client.SetActivity(&discord.Activity{Name: "les silvers feed 👺 | /help", Type: discord.ActivityWatching})
 	}
 }

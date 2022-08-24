@@ -128,7 +128,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			return err
 		}
 
-		matchHistory, err := ctx.leagueApi.GetMatchesBySummoner(oldSummonerData.Region, newSummonerData.Puuid)
+		matchHistory, err := ctx.leagueApi.GetMatchesBySummoner(oldSummonerData.Region, newSummonerData.Puuid, 1)
 		if err != nil {
 			return err
 		}

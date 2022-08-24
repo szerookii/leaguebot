@@ -19,10 +19,10 @@ var regions = map[string]string{
 	"oc1":  "sea",
 }
 
-func (l *LeagueAPI) GetMatchesBySummoner(region, puuid string) ([]*MatchDTO, error) {
+func (l *LeagueAPI) GetMatchesBySummoner(region, puuid string, number int) ([]*MatchDTO, error) {
 	var matchsIds []string
 
-	url := fmt.Sprintf("https://%s.api.riotgames.com/lol/match/v5/matches/by-puuid/%s/ids?type=ranked&start=0&count=3", regions[region], puuid)
+	url := fmt.Sprintf("https://%s.api.riotgames.com/lol/match/v5/matches/by-puuid/%s/ids?type=ranked&count=%d", regions[region], puuid, number)
 
 	body, err := l.DoRequest("GET", url, nil)
 

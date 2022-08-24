@@ -80,7 +80,9 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				Name: newSummonerData.Name,
 			}).Error
 
-			return err
+			if err != nil {
+				return err
+			}
 		}
 
 		if oldSummonerData.ProfileIconId != newSummonerData.ProfileIconId {
@@ -100,7 +102,9 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				ProfileIconId: newSummonerData.ProfileIconId,
 			}).Error
 
-			return err
+			if err != nil {
+				return err
+			}
 		}
 
 		if oldSummonerData.SummonerLevel != newSummonerData.SummonerLevel {
@@ -120,7 +124,9 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				SummonerLevel: newSummonerData.SummonerLevel,
 			}).Error
 
-			return err
+			if err != nil {
+				return err
+			}
 		}
 
 		leagues, err := ctx.leagueApi.GetLeagueDataBySummoner(oldSummonerData.Region, newSummonerData.Id)
@@ -228,7 +234,9 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				LastFlexLP:     oldSummonerData.LastFlexLP,
 			}).Error
 
-			return err
+			if err != nil {
+				return err
+			}
 		}
 	}
 

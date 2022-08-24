@@ -149,7 +149,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
 					e.SetThumbnail(iconUrl)
 
-					if wonGame(match.Info.Participants, newSummonerData.Id) {
+					if wonGame(match.Info.Participants, oldSummonerData.Id) {
 						e.SetColor(embed.Green)
 
 						e.AddField("Petite victoire en full tryhard (ou pas)", "Beaucoup pensent qu'en ranked on se doit de fumer tout les autres joueurs, mais non, on finit le nexus même en étant en 0/10", false)
@@ -189,7 +189,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
 					e.SetThumbnail(iconUrl)
 
-					if wonGame(match.Info.Participants, newSummonerData.Id) {
+					if wonGame(match.Info.Participants, oldSummonerData.Id) {
 						e.SetColor(embed.Green)
 
 						e.AddField("Petite victoire en full chill (ou pas)", "> Qu'est ce que la classée flexible ?\n> La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry...", false)

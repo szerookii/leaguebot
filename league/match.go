@@ -22,7 +22,7 @@ var regions = map[string]string{
 func (l *LeagueAPI) GetMatchesBySummoner(region, puuid string) ([]*MatchDTO, error) {
 	var matchsIds []string
 
-	url := fmt.Sprintf("https://%s.api.riotgames.com/lol/match/v5/matches/by-puuid/%s/ids?type=ranked&start=0&count=20", regions[region], puuid)
+	url := fmt.Sprintf("https://%s.api.riotgames.com/lol/match/v5/matches/by-puuid/%s/ids?type=ranked&start=0&count=3", regions[region], puuid)
 
 	body, err := l.DoRequest("GET", url, nil)
 

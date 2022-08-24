@@ -76,7 +76,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
 
 			err := db.UpdateColumns(&models.Summoner{
-				Id:   newSummonerData.Id,
+				Id:   oldSummonerData.Id,
 				Name: newSummonerData.Name,
 			}).Error
 
@@ -96,7 +96,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
 
 			err := db.UpdateColumns(&models.Summoner{
-				Id:            newSummonerData.Id,
+				Id:            oldSummonerData.Id,
 				ProfileIconId: newSummonerData.ProfileIconId,
 			}).Error
 
@@ -116,7 +116,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			ctx.client.Channel.SendMessage(logChannel, e.Embed())
 
 			err := db.UpdateColumns(&models.Summoner{
-				Id:            newSummonerData.Id,
+				Id:            oldSummonerData.Id,
 				SummonerLevel: newSummonerData.SummonerLevel,
 			}).Error
 
@@ -217,9 +217,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 			}
 
 			err = db.UpdateColumns(&models.Summoner{
-				Id:             newSummonerData.Id,
-				ProfileIconId:  newSummonerData.ProfileIconId,
-				SummonerLevel:  oldSummonerData.SummonerLevel,
+				Id:             oldSummonerData.Id,
 				LastSoloGameId: oldSummonerData.LastSoloGameId,
 				LastSoloTier:   oldSummonerData.LastSoloTier,
 				LastSoloRank:   oldSummonerData.LastSoloRank,

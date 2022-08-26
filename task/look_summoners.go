@@ -203,10 +203,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 					e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
 					e.SetThumbnail(iconUrl)
 
-					if leagueData != nil {
-						e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
-					}
-
 					if wonGame(match.Info.Participants, oldSummonerData.Id) {
 						e.SetColor(embed.Green)
 

@@ -31,7 +31,7 @@ func (task *LookSummonersTask) Name() string {
 }
 
 func (task *LookSummonersTask) GetInterval() time.Duration {
-	return 10 * time.Second
+	return 2 * time.Minute
 }
 
 func (task *LookSummonersTask) Run(ctx *Context) error {

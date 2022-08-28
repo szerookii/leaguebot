@@ -14,6 +14,13 @@ func Init() {
 	}
 
 	db.AutoMigrate(&models.Summoner{})
+
+	dbConn, err := db.DB()
+	if err != nil {
+		panic("failed to get database")
+	}
+
+	defer dbConn.Close()
 }
 
 func GetDB() (*gorm.DB, error) {

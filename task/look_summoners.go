@@ -40,6 +40,13 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 		return err
 	}
 
+	dbConn, err := db.DB()
+	if err != nil {
+		return err
+	}
+
+	defer dbConn.Close()
+
 	logChannel := ctx.config.ReportChannelId
 	if logChannel == "" {
 		return errors.New("report_channel_id is not set")

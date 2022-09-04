@@ -42,7 +42,18 @@ func (c *RouletteCommand) Execute(ctx *Context) bool {
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(choices), func(i, j int) { choices[i], choices[j] = choices[j], choices[i] })
 
-	ctx.client.Interaction.CreateResponse(ctx.interaction.Id, ctx.interaction.Token, "Tirage au sort...")
+	m, err := ctx.client.Interaction.CreateResponse(ctx.interaction.Id, ctx.interaction.Token, "Tirage au sort...")
+
+	if err != nil {
+		return false
+	}
+
+	if m.Type != discord.InteractionCallbackTypeDeferredChannelMessageWithSource {
+		return false
+	}
+
+	cId := m.Data.(*discord.Message).ChannelId
+	id := m.Data.(*discord.Message).Id
 
 	var choice string
 
@@ -53,12 +64,16 @@ func (c *RouletteCommand) Execute(ctx *Context) bool {
 
 		choice := choices[ci]
 
-		ctx.client.Interaction.EditResponse(ctx.interaction.Id, ctx.interaction.Token, fmt.Sprintf("➡️ %s ⬅️", choice))
+		ctx.client.Channel.Edit(cId, id, fmt.Sprintf("➡️ %s ⬅️", choice))
+
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		time.Sleep(1 * time.Second)
 	}
 
-	ctx.client.Interaction.EditResponse(ctx.interaction.Id, ctx.interaction.Token, fmt.Sprintf("Le résultat de la roulette est ➡️ %s", choice))
+	ctx.client.Channel.Edit(cId, id, fmt.Sprintf("Le résultat de la roulette est ➡️ %s", choice))
 
 	return true
 }

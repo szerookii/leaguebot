@@ -3,7 +3,7 @@ module github.com/szerookii/leaguebot
 go 1.17
 
 require (
-	github.com/Goscord/goscord v0.0.0-20220826113633-6ebc522e133f
+	github.com/Goscord/goscord v0.0.0-20220904014649-8e274d13b9ec
 	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.8
 )

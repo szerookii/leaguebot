@@ -1,6 +1,8 @@
 package command
 
 import (
+	"log"
+
 	"github.com/Goscord/goscord/discord"
 	"github.com/Goscord/goscord/gateway"
 	"github.com/szerookii/leaguebot/config"
@@ -30,6 +32,7 @@ func (mgr *CommandManager) Init() {
 	mgr.Register(new(ProfileCommand))
 	mgr.Register(new(ChampionMasteryCommand))
 	mgr.Register(new(AddSummonerCommand))
+	mgr.Register(new(RouletteCommand))
 	mgr.Register(new(InfoCommand))
 }
 
@@ -46,7 +49,7 @@ func (mgr *CommandManager) Handler(client *gateway.Session, config *config.Confi
 		cmd := mgr.Get(interaction.Data.Name)
 
 		if cmd != nil {
-			_ = cmd.Execute(&Context{client: client, config: config, leagueApi: mgr.leagueApi, interaction: interaction, cmdMgr: mgr})
+			go cmd.Execute(&Context{client: client, config: config, leagueApi: mgr.leagueApi, interaction: interaction, cmdMgr: mgr})
 		}
 	}
 }
@@ -67,7 +70,12 @@ func (mgr *CommandManager) Register(cmd Command) {
 		Options:     cmd.Options(),
 	}
 
-	mgr.client.Application.RegisterCommand(mgr.client.Me().Id, "", appCmd)
+	log.Printf("Registering command %s\n", cmd.Name())
+	_, err := mgr.client.Application.RegisterCommand(mgr.client.Me().Id, "", appCmd)
+
+	if err != nil {
+		log.Println(err)
+	}
 
 	mgr.commands[cmd.Name()] = cmd
 }

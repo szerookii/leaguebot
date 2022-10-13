@@ -4,10 +4,11 @@ import (
 	"github.com/szerookii/leaguebot/database/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func Init() {
-	db, err := gorm.Open(sqlite.Open("./database.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("./database.db"), &gorm.Config{ Logger: logger.Default.LogMode(logger.Silent) })
 
 	if err != nil {
 		panic("failed to connect database")
@@ -24,5 +25,5 @@ func Init() {
 }
 
 func GetDB() (*gorm.DB, error) {
-	return gorm.Open(sqlite.Open("./database.db"), &gorm.Config{})
+	return gorm.Open(sqlite.Open("./database.db"), &gorm.Config{ Logger: logger.Default.LogMode(logger.Silent) })
 }

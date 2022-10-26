@@ -156,34 +156,49 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				if match.Info.GameId != oldSummonerData.LastSoloGameId {
 					leagueData := getLeagueData(leagues, "RANKED_SOLO_5x5")
 
-					e := embed.NewEmbedBuilder()
+					if leagueData.Tier != oldSummonerData.LastSoloTier {
+						e := embed.NewEmbedBuilder()
 
-					e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
-					e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
-					e.SetThumbnail(iconUrl)
+						e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
+						e.SetColor(0xe7a854)
+						e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
+						e.SetThumbnail(iconUrl)
 
-					if wonGame(match.Info.Participants, oldSummonerData.Id) {
-						e.SetColor(embed.Green)
+						e.AddField("Changement de rang pour notre joueur", fmt.Sprintf("Bravo **%s**, t'as enfin appris à solo carry (ou pas), tu es passé %s !", newSummonerData.Name, leagueData.Tier), false)
 
-						e.AddField("Petite victoire en full tryhard (ou pas)", "Beaucoup pensent qu'en ranked on se doit de fumer tout les autres joueurs, mais non, on finit le nexus même en étant en 0/10", false)
-						e.AddField("Victoire", "✅", true)
-
-						if leagueData != nil {
-							e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
-							e.AddField("LP gagnés", fmt.Sprintf(":small_red_triangle: %d", leagueData.LeaguePoints-oldSummonerData.LastSoloLP), true)
-							e.AddField("LP", fmt.Sprintf(":trophy: %d", leagueData.LeaguePoints), true)
-						}
+						ctx.client.Channel.SendMessage(logChannel, e.Embed())
 					} else {
-						e.SetColor(embed.Red)
+						e := embed.NewEmbedBuilder()
 
-						e.AddField("De retour en looserQ", "> Qu'est ce que la honte ?\n> Sentiment d'abaissement, d'humiliation qui résulte d'une atteinte à l'honneur, à la dignité\nLa honte, c'est aussi perdre en ranked sur LoL, on espère ne plus te revoir", false)
-						e.AddField("Victoire", "❌", true)
+						e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
+						e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
+						e.SetThumbnail(iconUrl)
 
-						if leagueData != nil {
-							e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
-							e.AddField("LP perdus", fmt.Sprintf(":small_red_triangle_down: %d LP", oldSummonerData.LastSoloLP-leagueData.LeaguePoints), true)
-							e.AddField("LP", fmt.Sprintf(":trophy: %d LP", leagueData.LeaguePoints), true)
+						if wonGame(match.Info.Participants, oldSummonerData.Id) {
+							e.SetColor(embed.Green)
+
+							e.AddField("Petite victoire en full tryhard (ou pas)", "Beaucoup pensent qu'en ranked on se doit de fumer tout les autres joueurs, mais non, on finit le nexus même en étant en 0/10", false)
+							e.AddField("Victoire", "✅", true)
+
+							if leagueData != nil {
+								e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
+								e.AddField("LP gagnés", fmt.Sprintf(":small_red_triangle: %d", leagueData.LeaguePoints-oldSummonerData.LastSoloLP), true)
+								e.AddField("LP", fmt.Sprintf(":trophy: %d", leagueData.LeaguePoints), true)
+							}
+						} else {
+							e.SetColor(embed.Red)
+
+							e.AddField("De retour en looserQ", "> Qu'est ce que la honte ?\n> Sentiment d'abaissement, d'humiliation qui résulte d'une atteinte à l'honneur, à la dignité\nLa honte, c'est aussi perdre en ranked sur LoL, on espère ne plus te revoir", false)
+							e.AddField("Victoire", "❌", true)
+
+							if leagueData != nil {
+								e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
+								e.AddField("LP perdus", fmt.Sprintf(":small_red_triangle_down: %d LP", oldSummonerData.LastSoloLP-leagueData.LeaguePoints), true)
+								e.AddField("LP", fmt.Sprintf(":trophy: %d LP", leagueData.LeaguePoints), true)
+							}
 						}
+
+						ctx.client.Channel.SendMessage(logChannel, e.Embed())
 					}
 
 					oldSummonerData.LastSoloGameId = match.Info.GameId
@@ -192,8 +207,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 						oldSummonerData.LastSoloRank = leagueData.Rank
 						oldSummonerData.LastSoloLP = leagueData.LeaguePoints
 					}
-
-					ctx.client.Channel.SendMessage(logChannel, e.Embed())
 				}
 			}
 
@@ -203,35 +216,50 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				if match.Info.GameId != oldSummonerData.LastFlexGameId {
 					leagueData := getLeagueData(leagues, "RANKED_FLEX_SR")
 
-					e := embed.NewEmbedBuilder()
+					if leagueData.Tier != oldSummonerData.LastSoloTier {
+						e := embed.NewEmbedBuilder()
 
-					e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
-					e.SetColor(0xe7a854)
-					e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
-					e.SetThumbnail(iconUrl)
+						e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
+						e.SetColor(0xe7a854)
+						e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
+						e.SetThumbnail(iconUrl)
 
-					if wonGame(match.Info.Participants, oldSummonerData.Id) {
-						e.SetColor(embed.Green)
+						e.AddField("Changement de rang pour notre joueur", fmt.Sprintf("Bravo **%s**, t'as pris du temps même en te faisant carry (ou int :rofl:), tu es passé %s !", newSummonerData.Name, leagueData.Tier), false)
 
-						e.AddField("Petite victoire en full chill (ou pas)", "> Qu'est ce que la classée flexible ?\n> La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry...", false)
-						e.AddField("Victoire", "✅", true)
-
-						if leagueData != nil {
-							e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
-							e.AddField("LP gagnés", fmt.Sprintf(":small_red_triangle: %d", leagueData.LeaguePoints-oldSummonerData.LastFlexLP), true)
-							e.AddField("LP", fmt.Sprintf(":trophy: %d", leagueData.LeaguePoints), true)
-						}
+						ctx.client.Channel.SendMessage(logChannel, e.Embed())
 					} else {
-						e.SetColor(embed.Red)
+						e := embed.NewEmbedBuilder()
 
-						e.AddField("De retour en looserQ (en flexible en plus, la honte)", "> Qu'est ce que la classée flexible ?\n> La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry, sauf que là c’était pas ton cas avec le powerspike en 0/10...", false)
-						e.AddField("Victoire", "❌", true)
+						e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
+						e.SetColor(0xe7a854)
+						e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
+						e.SetThumbnail(iconUrl)
 
-						if leagueData != nil {
-							e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
-							e.AddField("LP perdus", fmt.Sprintf(":small_red_triangle_down: %d LP", oldSummonerData.LastFlexLP-leagueData.LeaguePoints), true)
-							e.AddField("LP", fmt.Sprintf(":trophy: %d LP", leagueData.LeaguePoints), true)
+						if wonGame(match.Info.Participants, oldSummonerData.Id) {
+							e.SetColor(embed.Green)
+
+							e.AddField("Petite victoire en full chill (ou pas)", "> Qu'est ce que la classée flexible ?\n> La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry...", false)
+							e.AddField("Victoire", "✅", true)
+
+							if leagueData != nil {
+								e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
+								e.AddField("LP gagnés", fmt.Sprintf(":small_red_triangle: %d", leagueData.LeaguePoints-oldSummonerData.LastFlexLP), true)
+								e.AddField("LP", fmt.Sprintf(":trophy: %d", leagueData.LeaguePoints), true)
+							}
+						} else {
+							e.SetColor(embed.Red)
+
+							e.AddField("De retour en looserQ (en flexible en plus, la honte)", "> Qu'est ce que la classée flexible ?\n> La classée flexible dans League of Legends est un mode de jeu qui est classé séparément de la file d'attente solo/duo. Il s'agit d'un mode de jeu compétitif à cinq contre cinq où vous pouvez avoir un groupe de 1, 2, 3 ou 5 joueurs (à l'exception des groupes de 4) dans un cadre classé.\nEn gros, tu joues à 5 et tu te fais hardcarry, sauf que là c’était pas ton cas avec le powerspike en 0/10...", false)
+							e.AddField("Victoire", "❌", true)
+
+							if leagueData != nil {
+								e.AddField("Rang", fmt.Sprintf("%s %s %s", tierEmote[leagueData.Tier], leagueData.Tier, leagueData.Rank), true)
+								e.AddField("LP perdus", fmt.Sprintf(":small_red_triangle_down: %d LP", oldSummonerData.LastFlexLP-leagueData.LeaguePoints), true)
+								e.AddField("LP", fmt.Sprintf(":trophy: %d LP", leagueData.LeaguePoints), true)
+							}
 						}
+
+						ctx.client.Channel.SendMessage(logChannel, e.Embed())
 					}
 
 					oldSummonerData.LastFlexGameId = match.Info.GameId
@@ -240,8 +268,6 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 						oldSummonerData.LastFlexRank = leagueData.Rank
 						oldSummonerData.LastFlexLP = leagueData.LeaguePoints
 					}
-
-					ctx.client.Channel.SendMessage(logChannel, e.Embed())
 				}
 			}
 

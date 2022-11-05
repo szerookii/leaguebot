@@ -164,7 +164,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 						e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
 						e.SetThumbnail(iconUrl)
 
-						e.AddField("Changement de rang pour notre joueur", fmt.Sprintf("Bravo **%s**, t'as enfin appris à solo carry (ou pas), tu es passé %s !", newSummonerData.Name, leagueData.Tier), false)
+						e.AddField("Changement de rang SoloQ pour notre joueur", fmt.Sprintf("Bravo **%s**, t'as enfin appris à solo carry (ou pas), tu es passé %s %s !", newSummonerData.Name, leagueData.Tier, leagueData.Rank), false)
 
 						ctx.client.Channel.SendMessage(logChannel, e.Embed())
 					} else {
@@ -216,7 +216,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 				if match.Info.GameId != oldSummonerData.LastFlexGameId {
 					leagueData := getLeagueData(leagues, "RANKED_FLEX_SR")
 
-					if leagueData.Tier != oldSummonerData.LastSoloTier {
+					if leagueData.Tier != oldSummonerData.LastFlexTier {
 						e := embed.NewEmbedBuilder()
 
 						e.SetFooter(ctx.client.Me().Username, ctx.client.Me().AvatarURL())
@@ -224,7 +224,7 @@ func (task *LookSummonersTask) Run(ctx *Context) error {
 						e.SetAuthor(fmt.Sprintf("%s#%s", oldSummonerData.Name, strings.ToUpper(oldSummonerData.Region)), iconUrl)
 						e.SetThumbnail(iconUrl)
 
-						e.AddField("Changement de rang pour notre joueur", fmt.Sprintf("Bravo **%s**, t'as pris du temps même en te faisant carry (ou int :rofl:), tu es passé %s !", newSummonerData.Name, leagueData.Tier), false)
+						e.AddField("Changement de rang Flex pour notre joueur", fmt.Sprintf("Bravo **%s**, t'as pris du temps même en te faisant carry (ou int :rofl:), tu es passé %s %s !", newSummonerData.Name, leagueData.Tier, leagueData.Rank), false)
 
 						ctx.client.Channel.SendMessage(logChannel, e.Embed())
 					} else {
